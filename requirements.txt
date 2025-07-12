@@ -110,7 +110,6 @@ numpy==1.26.4
 openai==1.54.4
 opt_einsum==3.4.0
 optree==0.16.0
-orjson==3.10.11
 overrides==7.7.0
 packaging==24.1
 Panda3D==1.10.15
@@ -139,7 +138,6 @@ Pygments==2.19.1
 PyMsgBox==1.0.9
 pyparsing==3.2.0
 pyperclip==1.9.0
-pypiwin32==223
 PyRect==0.2.0
 PyScreeze==1.0.1
 python-dateutil==2.9.0.post0
@@ -150,7 +148,6 @@ pyttsx3==2.98
 pytweening==1.2.0
 pytz==2024.2
 pywhatkit==5.4
-pywinpty==2.0.15
 PyYAML==6.0.2
 pyzmq==26.4.0
 referencing==0.36.2
