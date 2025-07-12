@@ -5,7 +5,7 @@ Flask-SocketIO==5.5.1
 Flask-SQLAlchemy==3.1.1
 gunicorn==23.0.0
 torch==2.7.1
-torchvision==0.17.0
+torchvision==0.22.1
 transformers==4.53.1
 sentence-transformers==5.0.0
 requests==2.32.3
