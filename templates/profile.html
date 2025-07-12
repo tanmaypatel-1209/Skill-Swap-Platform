@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>My Profile | Skill Swap</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      background: linear-gradient(to right, #fdfbfb, #ebedee);
+      color: #1f2937;
+      padding: 0 10px;
+    }
+
+    .top-bar {
+      background: linear-gradient(to right, #06b6d4, #3b82f6);
+      color: white;
+      padding: 20px;
+      border-radius: 0 0 20px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .top-bar h2 {
+      font-size: 24px;
+    }
+
+    .top-bar nav a {
+      color: white;
+      margin-left: 20px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: color 0.3s ease;
+    }
+
+    .top-bar nav a:hover {
+      color: #fcd34d;
+    }
+
+    .profile-container {
+      max-width: 900px;
+      margin: 30px auto;
+      padding: 20px;
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    }
+
+    .profile-header {
+      display: flex;
+      align-items: center;
+      gap: 30px;
+      flex-wrap: wrap;
+    }
+
+    .profile-image {
+      text-align: center;
+    }
+
+    .profile-image img {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid #3b82f6;
+    }
+
+    .edit-photo {
+      display: inline-block;
+      margin-top: 10px;
+      padding: 6px 12px;
+      background: #6366f1;
+      color: white;
+      font-size: 13px;
+      border-radius: 8px;
+      text-decoration: none;
+      transition: background 0.3s;
+    }
+
+    .edit-photo:hover {
+      background: #4338ca;
+    }
+
+    .profile-info h1 {
+      font-size: 26px;
+      color: #111827;
+    }
+
+    .profile-info p {
+      margin-top: 8px;
+      color: #374151;
+    }
+
+    .rating-container {
+      margin-top: 10px;
+      font-size: 14px;
+      color: #f59e0b;
+    }
+
+    .profile-sections {
+      margin-top: 30px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .profile-section {
+      background: #f9fafb;
+      padding: 20px;
+      border-radius: 12px;
+    }
+
+    .profile-section h3 {
+      font-size: 20px;
+      color: #2563eb;
+      margin-bottom: 10px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    .skills-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .skill-tag {
+      background: #c084fc;
+      color: white;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 14px;
+    }
+
+    .requests-section {
+      margin-top: 30px;
+    }
+
+    .requests-section h3 {
+      font-size: 20px;
+      color: #ef4444;
+      margin-bottom: 15px;
+    }
+
+    .request-list {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .request-card {
+      background: #f9fafb;
+      padding: 15px;
+      border-left: 6px solid #3b82f6;
+      border-radius: 12px;
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .request-info p {
+      margin-bottom: 6px;
+      font-size: 14px;
+    }
+
+    .request-date {
+      font-size: 12px;
+      color: #6b7280;
+    }
+
+    .request-actions {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .accept-btn, .reject-btn {
+      text-decoration: none;
+      padding: 8px 16px;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 14px;
+      transition: 0.3s ease;
+      display: inline-block;
+    }
+
+    .accept-btn {
+      background: linear-gradient(to right, #10b981, #22c55e);
+      color: white;
+    }
+
+    .accept-btn:hover {
+      background: linear-gradient(to right, #059669, #16a34a);
+    }
+
+    .reject-btn {
+      background: linear-gradient(to right, #ef4444, #dc2626);
+      color: white;
+    }
+
+    .reject-btn:hover {
+      background: linear-gradient(to right, #b91c1c, #991b1b);
+    }
+
+    .flash-messages {
+      margin-top: 20px;
+      padding: 15px;
+      background-color: #fef3c7;
+      color: #92400e;
+      border-radius: 10px;
+      text-align: center;
+      font-weight: 500;
+    }
+
+    .rating-form {
+      margin-top: 15px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .rating-form select {
+      padding: 5px;
+      border-radius: 5px;
+      border: 1px solid #ddd;
+    }
+
+    .rating-form button {
+      padding: 5px 10px;
+      background: #3b82f6;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    @media (max-width: 768px) {
+      .profile-header {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .profile-sections {
+        grid-template-columns: 1fr;
+      }
+
+      .request-card {
+        flex-direction: column;
+      }
+
+      .request-actions {
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="top-bar">
+    <h2>My Profile</h2>
+    <nav>
+      <a href="/">Home</a>
+      {% if user.is_admin %}
+        <a href="/admin">Admin</a>
+      {% endif %}
+      <a href="/logout">Logout</a>
+    </nav>
+  </header>
+
+  <main class="profile-container">
+    <div class="profile-header">
+      <div class="profile-image">
+        <img src="{{ url_for('static', filename='uploads/' + user.photo_filename) if user.photo_filename else url_for('static', filename='profile.png') }}" alt="{{ user.name }}">
+        <a href="/upload" class="edit-photo">Edit Photo</a>
+      </div>
+      <div class="profile-info">
+        <h1>{{ user.name }}</h1>
+        <p><strong>Email:</strong> {{ user.email }}</p>
+        <p><strong>Location:</strong> {{ user.location or 'Not specified' }}</p>
+        <p><strong>Availability:</strong> {{ user.availability or 'Not specified' }}</p>
+        <div class="rating-container">
+          <span class="stars">★★★★★</span>
+          <span class="rating">({{ user.rating }}/5)</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="profile-sections">
+      <section class="profile-section">
+        <h3>About Me</h3>
+        <p>{{ user.bio or "No bio yet" }}</p>
+      </section>
+
+      <section class="profile-section">
+        <h3>Skills I Offer</h3>
+        <div class="skills-list">
+          {% for skill in user.skills_offered.split(',') %}
+            <span class="skill-tag">{{ skill.strip() }}</span>
+          {% endfor %}
+        </div>
+      </section>
+
+      <section class="profile-section">
+        <h3>Skills I Want</h3>
+        <div class="skills-list">
+          {% for skill in user.skills_wanted.split(',') %}
+            <span class="skill-tag">{{ skill.strip() }}</span>
+          {% endfor %}
+        </div>
+      </section>
+
+      <section class="profile-section">
+        <h3>Rate Your Experience</h3>
+        <form class="rating-form" method="POST" action="{{ url_for('rate_user', user_id=user.id) }}">
+          <select name="rating" required>
+            <option value="">Select rating</option>
+            <option value="5">5 - Excellent</option>
+            <option value="4">4 - Good</option>
+            <option value="3">3 - Average</option>
+            <option value="2">2 - Poor</option>
+            <option value="1">1 - Terrible</option>
+          </select>
+          <button type="submit">Submit Rating</button>
+        </form>
+      </section>
+    </div>
+
+    {% if pending_requests %}
+    <section class="requests-section">
+      <h3>Pending Swap Requests</h3>
+      <div class="request-list">
+        {% for req in pending_requests %}
+        <div class="request-card">
+          <div class="request-info">
+            <p><strong>From:</strong> {{ req.requester.name }}</p>
+            <p><strong>Skill Requested:</strong> {{ req.skill_requested }}</p>
+            {% if req.message %}
+            <p><strong>Message:</strong> {{ req.message }}</p>
+            {% endif %}
+            <p class="request-date">Requested on: {{ req.created_at.strftime('%Y-%m-%d') }}</p>
+          </div>
+          <div class="request-actions">
+            <a href="{{ url_for('handle_request', request_id=req.id, action='accept') }}" class="accept-btn">Accept</a>
+            <a href="{{ url_for('handle_request', request_id=req.id, action='reject') }}" class="reject-btn">Reject</a>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </section>
+    {% endif %}
+  </main>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <div class="flash-messages">
+        {% for category, message in messages %}
+          <div class="flash {{ category }}">{{ message }}</div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+</body>
+</html>

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Browse Skills</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+  <header class="top-bar">
+    <h2>Skill Swap Platform</h2>
+    <nav>
+      <a href="#">Swap Request</a>
+      <a href="/upload">Upload Photo</a>
+      <img src="{{ url_for('static', filename='profile.png') }}" class="profile-pic" alt="You">
+    </nav>
+  </header>
+
+  <section class="search-bar">
+    <select>
+      <option>Availability</option>
+      <option>Weekends</option>
+      <option>Evenings</option>
+    </select>
+    <input type="text" placeholder="Search skills..." />
+    <button>Search</button>
+  </section>
+
+  <section class="card-list">
+    {% for user in users %}
+    <div class="user-card">
+      <div class="left">
+        <img src="{{ url_for('static', filename='uploads/' + (user.photo_filename or 'profile.png')) }}" class="pfp" alt="{{ user.name }}">
+      </div>
+      <div class="middle">
+        <h3>{{ user.name }}</h3>
+        <p><strong>Skills offered:</strong> {{ user.skills_offered }}</p>
+        <p><strong>Skills wanted:</strong> {{ user.skills_wanted }}</p>
+      </div>
+      <div class="right">
+        <button class="req-btn">Request</button>
+        <p class="rating">Rating: {{ user.rating }}/5</p>
+      </div>
+    </div>
+    {% endfor %}
+  </section>
+
+</body>
+</html>

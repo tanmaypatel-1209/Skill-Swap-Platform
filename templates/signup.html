@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Sign Up | Skill Swap</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background: linear-gradient(135deg, #a1c4fd, #c2e9fb);
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .form-container {
+      background: #ffffff;
+      padding: 35px 30px;
+      border-radius: 20px;
+      box-shadow: 0 15px 25px rgba(0, 0, 0, 0.1),
+                  0 5px 10px rgba(0, 0, 0, 0.05);
+      width: 100%;
+      max-width: 420px;
+      transition: transform 0.3s ease-in-out;
+    }
+
+    .form-container:hover {
+      transform: scale(1.02);
+    }
+
+    .form-container h2 {
+      text-align: center;
+      margin-bottom: 25px;
+      color: #1e3a8a;
+      font-size: 26px;
+    }
+
+    form input[type="email"],
+    form input[type="password"],
+    form input[type="text"],
+    form select,
+    form textarea {
+      width: 100%;
+      padding: 14px 16px;
+      margin: 10px 0 20px;
+      border: none;
+      border-radius: 12px;
+      font-size: 15px;
+      background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
+      box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.08), 0 2px 8px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
+      color: #1e293b;
+    }
+
+    form textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+
+    form input:focus,
+    form select:focus,
+    form textarea:focus {
+      outline: none;
+      background: white;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3), 0 2px 12px rgba(0, 0, 0, 0.1);
+      border: 1px solid #3b82f6;
+    }
+
+    input[type="file"] {
+      display: none;
+    }
+
+    #photo + label {
+      display: inline-block;
+      background: linear-gradient(90deg, #ec4899, #8b5cf6);
+      color: #fff;
+      padding: 10px 20px;
+      border-radius: 30px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-bottom: 10px;
+      text-align: center;
+      font-weight: 600;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      width: 100%;
+    }
+
+    #photo + label:hover {
+      background: linear-gradient(90deg, #f43f5e, #7c3aed);
+      transform: scale(1.05);
+    }
+
+    #file-name {
+      margin-top: 6px;
+      font-size: 13px;
+      color: #334155;
+      font-style: italic;
+      text-align: center;
+      margin-bottom: 15px;
+    }
+
+    form button {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(90deg, #06b6d4, #3b82f6, #6366f1);
+      background-size: 200%;
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.4s ease, transform 0.2s ease;
+      box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    form button:hover {
+      background-position: right center;
+      transform: translateY(-2px);
+      box-shadow: 0 10px 18px rgba(0, 0, 0, 0.15);
+    }
+
+    .alert {
+      padding: 12px;
+      margin-bottom: 15px;
+      border-radius: 8px;
+      font-size: 14px;
+    }
+
+    .alert-success {
+      background-color: #dcfce7;
+      color: #166534;
+    }
+
+    .alert-error {
+      background-color: #fee2e2;
+      color: #991b1b;
+    }
+
+    p {
+      text-align: center;
+      margin-top: 15px;
+      font-size: 14px;
+    }
+
+    p a {
+      color: #3b82f6;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    p a:hover {
+      text-decoration: underline;
+    }
+
+    @media screen and (max-width: 500px) {
+      .form-container {
+        margin: 0 20px;
+        padding: 25px 20px;
+      }
+
+      .form-container h2 {
+        font-size: 22px;
+      }
+
+      form input,
+      form button {
+        font-size: 14px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="form-container">
+    <h2>Sign Up</h2>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert alert-{{ category }}">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+    <form method="POST" enctype="multipart/form-data">
+      <input type="email" name="email" placeholder="Email" required>
+      <input type="password" name="password" placeholder="Password" required>
+      <input type="text" name="name" placeholder="Full Name" required>
+      <input type="text" name="skills_offered" placeholder="Skills You Offer (comma separated)" required>
+      <input type="text" name="skills_wanted" placeholder="Skills You Want (comma separated)" required>
+      <input type="text" name="location" placeholder="Your Location">
+      <textarea name="bio" placeholder="Tell us about yourself..."></textarea>
+      
+      <select name="availability" required>
+        <option value="">Select Availability</option>
+        <option value="weekdays">Weekdays</option>
+        <option value="weekends">Weekends</option>
+        <option value="flexible">Flexible</option>
+        <option value="evenings">Evenings</option>
+      </select>
+
+      <input type="file" name="photo" id="photo" accept="image/*">
+      <label for="photo"> Choose Profile Picture</label>
+      <div id="file-name">No file chosen</div>
+
+      <button type="submit">Create Account</button>
+    </form>
+    <p>Already have an account? <a href="/login">Login</a></p>
+  </div>
+
+  <script>
+    const photoInput = document.getElementById("photo");
+    const fileName = document.getElementById("file-name");
+
+    photoInput.addEventListener("change", function () {
+      if (photoInput.files.length > 0) {
+        fileName.textContent = "Selected: " + photoInput.files[0].name;
+      } else {
+        fileName.textContent = "No file chosen";
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Dashboard | Skill Swap</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background: #f3f4f6;
+      color: #1f2937;
+      padding: 20px;
+    }
+
+    .top-bar {
+      background: linear-gradient(to right, #1e3a8a, #3b82f6);
+      color: white;
+      padding: 20px;
+      border-radius: 0 0 20px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+    }
+
+    .top-bar h2 {
+      font-size: 24px;
+    }
+
+    .top-bar nav a {
+      color: white;
+      margin-left: 20px;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .dashboard {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .card {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .card h3 {
+      margin-bottom: 20px;
+      color: #1e3a8a;
+      border-bottom: 1px solid #e5e7eb;
+      padding-bottom: 10px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 12px 15px;
+      text-align: left;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    th {
+      background-color: #f9fafb;
+      font-weight: 600;
+    }
+
+    tr:hover {
+      background-color: #f9fafb;
+    }
+
+    .status-pending {
+      color: #d97706;
+      font-weight: 600;
+    }
+
+    .status-accepted {
+      color: #059669;
+      font-weight: 600;
+    }
+
+    .status-rejected {
+      color: #dc2626;
+      font-weight: 600;
+    }
+
+    .btn {
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: all 0.3s;
+    }
+
+    .btn-danger {
+      background-color: #fee2e2;
+      color: #b91c1c;
+    }
+
+    .btn-danger:hover {
+      background-color: #fecaca;
+    }
+
+    .btn-primary {
+      background-color: #dbeafe;
+      color: #1d4ed8;
+    }
+
+    .btn-primary:hover {
+      background-color: #bfdbfe;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 15px;
+      margin-bottom: 30px;
+    }
+
+    .stat-card {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+
+    .stat-card h4 {
+      color: #6b7280;
+      font-size: 14px;
+      margin-bottom: 10px;
+    }
+
+    .stat-card p {
+      font-size: 24px;
+      font-weight: bold;
+      color: #1f2937;
+    }
+
+    @media (max-width: 1024px) {
+      .dashboard {
+        grid-template-columns: 1fr;
+      }
+
+      .stats {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .stats {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="top-bar">
+    <h2>Admin Dashboard</h2>
+    <nav>
+      <a href="/">Home</a>
+      <a href="/logout">Logout</a>
+    </nav>
+  </header>
+
+  <div class="stats">
+    <div class="stat-card">
+      <h4>Total Users</h4>
+      <p>{{ users|length }}</p>
+    </div>
+    <div class="stat-card">
+      <h4>Pending Requests</h4>
+      <p>{{ requests|selectattr('status', 'equalto', 'pending')|list|length }}</p>
+    </div>
+    <div class="stat-card">
+      <h4>Accepted Requests</h4>
+      <p>{{ requests|selectattr('status', 'equalto', 'accepted')|list|length }}</p>
+    </div>
+    <div class="stat-card">
+      <h4>Rejected Requests</h4>
+      <p>{{ requests|selectattr('status', 'equalto', 'rejected')|list|length }}</p>
+    </div>
+  </div>
+
+  <div class="dashboard">
+    <div class="card">
+      <h3>Recent Users</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Joined</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for user in users[-5:] %}
+          <tr>
+            <td>{{ user.name }}</td>
+            <td>{{ user.email }}</td>
+            <td>{{ user.created_at.strftime('%Y-%m-%d') }}</td>
+            <td>
+              <button class="btn btn-primary">View</button>
+              <button class="btn btn-danger">Delete</button>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <h3>Recent Requests</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Requester</th>
+            <th>Recipient</th>
+            <th>Skill</th>
+            <th>Status</th>
+            <th>Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for req in requests[-5:] %}
+          <tr>
+            <td>{{ req.requester.name }}</td>
+            <td>{{ req.recipient.name }}</td>
+            <td>{{ req.skill_requested }}</td>
+            <td class="status-{{ req.status }}">{{ req.status|title }}</td>
+            <td>{{ req.created_at.strftime('%Y-%m-%d') }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</body>
+</html>

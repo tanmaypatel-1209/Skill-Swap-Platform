@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Add New User</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+  <h2>Add New User</h2>
+
+  <form method="POST" enctype="multipart/form-data">
+    <label>Name:</label><br>
+    <input type="text" name="name" required><br><br>
+
+    <label>Skills Offered:</label><br>
+    <input type="text" name="skills_offered" required><br><br>
+
+    <label>Skills Wanted:</label><br>
+    <input type="text" name="skills_wanted" required><br><br>
+
+    <label>Profile Picture:</label><br>
+    <input type="file" name="profile_pic"><br><br>
+
+    <button type="submit">Add User</button>
+  </form>
+
+  {% if success %}
+    <p style="color: green;">✅ User added successfully!</p>
+  {% endif %}
+
+</body>
+</html>

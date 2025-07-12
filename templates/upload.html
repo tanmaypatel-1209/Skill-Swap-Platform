@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Upload Profile Picture</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background: #f3f4f6;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .upload-container {
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      max-width: 500px;
+      width: 100%;
+      text-align: center;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+      color: #1e3a8a;
+    }
+
+    .success {
+      color: #059669;
+      margin-bottom: 20px;
+      font-weight: 500;
+    }
+
+    .error {
+      color: #dc2626;
+      margin-bottom: 20px;
+      font-weight: 500;
+    }
+
+    .preview {
+      margin: 20px 0;
+    }
+
+    .preview img {
+      max-width: 200px;
+      border-radius: 50%;
+      border: 3px solid #3b82f6;
+    }
+
+    form {
+      margin-top: 20px;
+    }
+
+    input[type="file"] {
+      margin: 10px auto;
+      display: block;
+      width: 100%;
+      max-width: 300px;
+    }
+
+    button {
+      background: #3b82f6;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      background: #2563eb;
+    }
+
+    .back-link {
+      display: inline-block;
+      margin-top: 20px;
+      color: #3b82f6;
+      text-decoration: none;
+    }
+
+    .back-link:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="upload-container">
+    <h1>Upload Profile Picture</h1>
+
+    {% if success %}
+      <p class="success">Upload successful! 🎉</p>
+      <div class="preview">
+        <img src="{{ url_for('static', filename='uploads/' + filename) }}" alt="Profile Picture">
+      </div>
+    {% elif error %}
+      <p class="error">{{ error }}</p>
+    {% endif %}
+
+    <form method="POST" enctype="multipart/form-data">
+      <input type="file" name="profile_pic" accept="image/*" required>
+      <button type="submit">Upload</button>
+    </form>
+
+    <a href="/profile" class="back-link">Back to Profile</a>
+  </div>
+</body>
+</html>

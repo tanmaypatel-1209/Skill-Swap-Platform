@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Skill Swap{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+    {% block head %}{% endblock %}
+</head>
+<body>
+    <header class="top-bar">
+        <h1>Skill Swap</h1>
+        <nav>
+            {% if 'user_id' in session %}
+                <a href="{{ url_for('profile') }}">Profile</a>
+                <a href="{{ url_for('logout') }}">Logout</a>
+            {% else %}
+                <a href="{{ url_for('login') }}">Login</a>
+                <a href="{{ url_for('signup') }}">Sign Up</a>
+            {% endif %}
+        </nav>
+    </header>
+
+    <main>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-messages">
+                    {% for category, message in messages %}
+                        <div class="flash {{ category }}">{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+        
+        {% block content %}{% endblock %}
+    </main>
+
+    <script>
+        const socket = io();
+        
+        socket.on('user_update', function(data) {
+            // Update user status in real-time
+            const userElement = document.querySelector(`.user-${data.user_id}`);
+            if (userElement) {
+                userElement.classList.toggle('online', data.status === 'online');
+                userElement.classList.toggle('offline', data.status === 'offline');
+            }
+        });
+        
+        socket.on('profile_updated', function(data) {
+            // Handle profile updates in real-time
+            if (data.user_id === {{ session.get('user_id', 0) }}) {
+                window.location.reload();
+            }
+        });
+    </script>
+</body>
+</html>

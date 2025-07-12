@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Request Skill Swap</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+  
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', 'Segoe UI', sans-serif;
+    }
+
+    body {
+      background: linear-gradient(to right, #c2e9fb, #a1c4fd);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .form-container {
+      background: #ffffff;
+      padding: 35px 30px;
+      border-radius: 18px;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 500px;
+      animation: slideFadeIn 0.4s ease;
+    }
+
+    @keyframes slideFadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    h2 {
+      text-align: center;
+      color: #1e3a8a;
+      margin-bottom: 25px;
+      font-size: 26px;
+      font-weight: 600;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      color: #374151;
+      font-weight: 500;
+      font-size: 15px;
+    }
+
+    select, textarea {
+      width: 100%;
+      padding: 14px;
+      font-size: 15px;
+      border-radius: 12px;
+      border: 1px solid #d1d5db;
+      background: #f9fafb;
+      transition: 0.3s ease;
+    }
+
+    select:focus, textarea:focus {
+      border-color: #06b6d4;
+      box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.3);
+      background: #ffffff;
+      outline: none;
+    }
+
+    textarea {
+      resize: vertical;
+    }
+
+    button {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(to right, #06b6d4, #3b82f6);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 10px 18px rgba(0, 0, 0, 0.1);
+    }
+
+    button:hover {
+      background: linear-gradient(to right, #0ea5e9, #1d4ed8);
+      transform: translateY(-1px);
+    }
+
+    .cancel-btn {
+      display: inline-block;
+      margin-top: 15px;
+      width: 100%;
+      padding: 12px;
+      text-align: center;
+      background: linear-gradient(to right, #9ca3af, #ef4444);
+      color: white;
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+
+    .cancel-btn:hover {
+      background: linear-gradient(to right, #6b7280, #dc2626);
+      transform: translateY(-1px);
+    }
+
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    .user-info img {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid #3b82f6;
+    }
+
+    .user-details h3 {
+      margin: 0;
+      color: #1e293b;
+    }
+
+    .user-details p {
+      margin: 5px 0 0;
+      color: #64748b;
+      font-size: 14px;
+    }
+
+    @media (max-width: 500px) {
+      .form-container {
+        padding: 25px 20px;
+      }
+
+      h2 {
+        font-size: 22px;
+      }
+
+      button, .cancel-btn {
+        font-size: 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="form-container">
+    <h2>Request Skill Swap</h2>
+
+    <div class="user-info">
+      <img src="{{ url_for('static', filename='uploads/' + (recipient.photo_filename or 'profile.png')) }}" alt="{{ recipient.name }}">
+      <div class="user-details">
+        <h3>{{ recipient.name }}</h3>
+        <p>{{ recipient.location or 'No location specified' }}</p>
+      </div>
+    </div>
+
+    <form method="POST">
+      <div class="form-group">
+        <label for="skill_requested">Select Skill You Want:</label>
+        <select name="skill_requested" id="skill_requested" required>
+          {% for skill in recipient.skills_offered.split(',') %}
+            <option value="{{ skill.strip() }}">{{ skill.strip() }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="message">Message (optional):</label>
+        <textarea name="message" id="message" rows="4" placeholder="Add a personal message..."></textarea>
+      </div>
+
+      <button type="submit">Send Request</button>
+      <a href="{{ url_for('home') }}" class="cancel-btn">Cancel</a>
+    </form>
+  </div>
+</body>
+</html>

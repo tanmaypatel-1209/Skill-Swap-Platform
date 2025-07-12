@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Skill Swap Platform</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      background: linear-gradient(to right, #e0f7fa, #f0f0f0);
+      color: #1f2937;
+      padding: 0 10px;
+    }
+
+    header.top-bar {
+      background: linear-gradient(to right, #06b6d4, #3b82f6);
+      color: #fff;
+      padding: 20px;
+      border-radius: 0 0 20px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    header h2 {
+      font-size: 24px;
+    }
+
+    header nav a {
+      color: white;
+      margin-left: 20px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: color 0.3s;
+    }
+
+    header nav a:hover {
+      color: #fcd34d;
+    }
+
+    .search-bar {
+      background: #ffffff;
+      padding: 20px;
+      margin: 20px auto;
+      border-radius: 15px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+      max-width: 700px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+    }
+
+    .search-bar select,
+    .search-bar input[type="text"],
+    .search-bar button {
+      padding: 10px 14px;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      font-size: 14px;
+    }
+
+    .search-bar button {
+      background: linear-gradient(to right, #3b82f6, #6366f1);
+      color: white;
+      border: none;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .search-bar button:hover {
+      background: linear-gradient(to right, #2563eb, #4f46e5);
+    }
+
+    .card-list {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      max-width: 1000px;
+      margin: 0 auto 40px;
+    }
+
+    .user-card {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      background: #ffffff;
+      padding: 20px;
+      border-radius: 16px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    .user-card .left img.pfp {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid #3b82f6;
+    }
+
+    .user-card .middle {
+      flex: 1;
+    }
+
+    .user-card h3 {
+      font-size: 20px;
+      color: #111827;
+      margin-bottom: 8px;
+    }
+
+    .tag {
+      display: inline-block;
+      background: #c084fc;
+      color: white;
+      padding: 4px 10px;
+      border-radius: 20px;
+      margin: 2px 6px 2px 0;
+      font-size: 13px;
+    }
+
+    .green {
+      color: #059669;
+      font-weight: 600;
+    }
+
+    .blue {
+      color: #2563eb;
+      font-weight: 600;
+    }
+
+    .req-btn {
+      display: inline-block;
+      padding: 10px 20px;
+      background: linear-gradient(to right, #06b6d4, #3b82f6);
+      color: white;
+      font-weight: bold;
+      border-radius: 12px;
+      text-decoration: none;
+      transition: background 0.3s ease, transform 0.2s ease;
+    }
+
+    .req-btn:hover {
+      background: linear-gradient(to right, #0891b2, #2563eb);
+      transform: translateY(-1px);
+    }
+
+    .rating-container {
+      margin-top: 10px;
+      font-size: 14px;
+      color: #fbbf24;
+    }
+
+    .no-results {
+      text-align: center;
+      margin-top: 30px;
+    }
+
+    .no-results a {
+      color: #3b82f6;
+      text-decoration: underline;
+    }
+
+    .pagination {
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    .pagination a,
+    .pagination .ellipsis {
+      display: inline-block;
+      margin: 0 5px;
+      color: #374151;
+      text-decoration: none;
+      font-weight: bold;
+      padding: 8px 14px;
+      border-radius: 8px;
+    }
+
+    .pagination a.active {
+      background: #3b82f6;
+      color: white;
+    }
+
+    .pagination a.page-nav:hover {
+      background-color: #e0e7ff;
+    }
+
+    .flash-messages {
+      max-width: 600px;
+      margin: 20px auto;
+      padding: 15px;
+      border-radius: 10px;
+      background-color: #fef3c7;
+      color: #92400e;
+      text-align: center;
+      font-weight: 500;
+    }
+
+    @media (max-width: 768px) {
+      .user-card {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+      }
+
+      .user-card .middle {
+        width: 100%;
+      }
+
+      .search-bar {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="top-bar">
+    <h2>Skill Swap Platform</h2>
+    <nav>
+      {% if 'user_id' in session %}
+        <a href="/profile">My Profile</a>
+        <a href="/logout">Logout</a>
+      {% else %}
+        <a href="/login">Login</a>
+        <a href="/signup">Sign Up</a>
+      {% endif %}
+    </nav>
+  </header>
+
+  <section class="search-bar">
+    <form method="GET" action="/">
+      <select name="availability">
+        <option value="">Availability</option>
+        <option value="weekends" {% if request.args.get('availability') == 'weekends' %}selected{% endif %}>Weekends</option>
+        <option value="evenings" {% if request.args.get('availability') == 'evenings' %}selected{% endif %}>Evenings</option>
+        <option value="weekdays" {% if request.args.get('availability') == 'weekdays' %}selected{% endif %}>Weekdays</option>
+        <option value="flexible" {% if request.args.get('availability') == 'flexible' %}selected{% endif %}>Flexible</option>
+      </select>
+      <input type="text" name="location" placeholder="Location" value="{{ request.args.get('location', '') }}">
+      <input type="text" name="q" placeholder="Search skills..." value="{{ request.args.get('q', '') }}">
+      <button type="submit">Search</button>
+    </form>
+  </section>
+
+  <section class="card-list">
+    {% if users %}
+      {% for user in users %}
+        {% if 'user_id' in session and user.id != session['user_id'] or 'user_id' not in session %}
+        <div class="user-card">
+          <div class="left">
+            <img src="{{ url_for('static', filename='uploads/' + user.photo_filename) if user.photo_filename else url_for('static', filename='profile.png') }}" 
+     alt="{{ user.name }}" class="pfp">
+          </div>
+          <div class="middle">
+            <h3>{{ user.name }}</h3>
+            <p><span class="green">Skills Offered:</span>
+              {% for skill in user.skills_offered.split(',') %}
+                <span class="tag">{{ skill.strip() }}</span>
+              {% endfor %}
+            </p>
+            <p><span class="blue">Skills Wanted:</span>
+              {% for skill in user.skills_wanted.split(',') %}
+                <span class="tag">{{ skill.strip() }}</span>
+              {% endfor %}
+            </p>
+            <p><strong>Location:</strong> {{ user.location or 'Not specified' }}</p>
+            <p><strong>Availability:</strong> {{ user.availability or 'Not specified' }}</p>
+          </div>
+          <div class="right">
+            {% if 'user_id' in session %}
+              <a href="{{ url_for('request_skill', user_id=user.id) }}" class="req-btn">Request Swap</a>
+            {% else %}
+              <a href="/login" class="req-btn">Login to Request</a>
+            {% endif %}
+            <div class="rating-container">
+              <span class="stars">★★★★★</span>
+              <span class="rating">({{ user.rating }}/5)</span>
+            </div>
+          </div>
+        </div>
+        {% endif %}
+      {% endfor %}
+    {% else %}
+      <div class="no-results">
+        <p>No users found matching your search.</p>
+        <a href="/" class="clear-search">Clear search filters</a>
+      </div>
+    {% endif %}
+  </section>
+
+  {% if users and users|length > 5 %}
+  <section class="pagination">
+    <a href="#" class="page-nav">&#8249;</a>
+    <a href="#" class="active">1</a>
+    <a href="#">2</a>
+    <a href="#">3</a>
+    <span class="ellipsis">...</span>
+    <a href="#">7</a>
+    <a href="#" class="page-nav">&#8250;</a>
+  </section>
+  {% endif %}
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <div class="flash-messages">
+        {% for category, message in messages %}
+          <div class="flash {{ category }}">{{ message }}</div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+
+</body>
+</html>

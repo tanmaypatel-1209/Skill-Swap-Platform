@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Messages</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+    
+    body {
+      background: #f5f5f5;
+      padding: 20px;
+    }
+    
+    .message-container {
+      max-width: 800px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      overflow: hidden;
+    }
+    
+    .message-header {
+      background: linear-gradient(to right, #06b6d4, #3b82f6);
+      color: white;
+      padding: 20px;
+    }
+    
+    .message-header h2 {
+      font-size: 22px;
+    }
+    
+    .message-header p {
+      opacity: 0.9;
+      margin-top: 5px;
+    }
+    
+    .messages {
+      padding: 20px;
+      max-height: 500px;
+      overflow-y: auto;
+    }
+    
+    .message {
+      margin-bottom: 15px;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .message.sent {
+      align-items: flex-end;
+    }
+    
+    .message.received {
+      align-items: flex-start;
+    }
+    
+    .message-content {
+      max-width: 70%;
+      padding: 12px 16px;
+      border-radius: 18px;
+      position: relative;
+    }
+    
+    .sent .message-content {
+      background: #3b82f6;
+      color: white;
+      border-bottom-right-radius: 2px;
+    }
+    
+    .received .message-content {
+      background: #e5e7eb;
+      color: #111827;
+      border-bottom-left-radius: 2px;
+    }
+    
+    .message-sender {
+      font-size: 12px;
+      margin-bottom: 5px;
+      color: #6b7280;
+    }
+    
+    .message-time {
+      font-size: 11px;
+      margin-top: 5px;
+      color: #9ca3af;
+      text-align: right;
+    }
+    
+    .message-form {
+      padding: 20px;
+      border-top: 1px solid #e5e7eb;
+    }
+    
+    .message-form textarea {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      resize: none;
+      margin-bottom: 10px;
+      min-height: 80px;
+    }
+    
+    .message-form button {
+      background: linear-gradient(to right, #06b6d4, #3b82f6);
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+    
+    .back-link {
+      display: inline-block;
+      margin-top: 20px;
+      color: #3b82f6;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="message-container">
+    <div class="message-header">
+      <h2>Swap: {{ request.skill_requested }}</h2>
+      <p>With {{ request.recipient.name if current_user_id == request.requester_id else request.requester.name }}</p>
+    </div>
+    
+    <div class="messages">
+      {% for message in messages %}
+        <div class="message {% if message.sender_id == current_user_id %}sent{% else %}received{% endif %}">
+          <div class="message-sender">
+            {{ message.sender.name }}
+          </div>
+          <div class="message-content">
+            {{ message.content }}
+            <div class="message-time">
+              {{ message.timestamp.strftime('%b %d, %Y %I:%M %p') }}
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+    
+    <form class="message-form" method="POST">
+      <textarea name="content" placeholder="Type your message..." required></textarea>
+      <button type="submit">Send Message</button>
+    </form>
+  </div>
+  
+  <a href="{{ url_for('profile') }}" class="back-link">← Back to Profile</a>
+</body>
+</html>
