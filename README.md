@@ -18,3 +18,4 @@ This is a web app where users can sign up, log in, and share their skills with o
 1. Clone this repo
 2. Install requirements: `pip install -r requirements.txt`
 3. Run: `python app.py`
+"# Project Title" 
