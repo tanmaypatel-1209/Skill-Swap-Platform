@@ -1,11 +1,21 @@
+<<<<<<< HEAD
 from flask import Flask, render_template, request, redirect, url_for, session, flash
+=======
+from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify
+>>>>>>> 6add0c4 (add file)
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 from flask_mail import Mail, Message
 from itsdangerous import URLSafeTimedSerializer
+<<<<<<< HEAD
 import os
 from datetime import datetime
+=======
+from datetime import datetime
+import os
+from sqlalchemy import or_, and_
+>>>>>>> 6add0c4 (add file)
 
 app = Flask(__name__)
 app.secret_key = os.environ.get('SECRET_KEY', 'super_secret_123')
@@ -26,7 +36,10 @@ app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'postgres
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
+<<<<<<< HEAD
 # Upload configuration
+=======
+>>>>>>> 6add0c4 (add file)
 UPLOAD_FOLDER = 'static/uploads'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
@@ -60,10 +73,63 @@ class Request(db.Model):
     status = db.Column(db.String(20), default='pending')
     created_at = db.Column(db.DateTime, server_default=db.func.now())
     updated_at = db.Column(db.DateTime, onupdate=db.func.now())
+<<<<<<< HEAD
     
     requester = db.relationship('User', foreign_keys=[requester_id])
     recipient = db.relationship('User', foreign_keys=[recipient_id])
 
+=======
+
+    requester = db.relationship('User', foreign_keys=[requester_id])
+    recipient = db.relationship('User', foreign_keys=[recipient_id])
+
+class Message(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    sender_id = db.Column(db.Integer, nullable=False)
+    receiver_id = db.Column(db.Integer, nullable=False)
+    message = db.Column(db.Text, nullable=False)
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow)
+
+@app.route('/send_message', methods=['POST'])
+def send_message():
+    sender_id = int(request.form['sender_id'])
+    receiver_id = int(request.form['receiver_id'])
+    message = request.form['message']
+    msg = Message(sender_id=sender_id, receiver_id=receiver_id, message=message)
+    db.session.add(msg)
+    db.session.commit()
+    return jsonify({'status': 'message_sent'})
+
+@app.route('/get_messages/<int:user_a>/<int:user_b>')
+def get_messages(user_a, user_b):
+    msgs = Message.query.filter(
+        ((Message.sender_id == user_a) & (Message.receiver_id == user_b)) |
+        ((Message.sender_id == user_b) & (Message.receiver_id == user_a))
+    ).order_by(Message.timestamp.asc()).all()
+    return jsonify([{
+        'sender_id': m.sender_id,
+        'message': m.message,
+        'timestamp': m.timestamp.strftime('%Y-%m-%d %H:%M:%S')
+    } for m in msgs])
+
+@app.route('/chat/<int:user_b>')
+def chat(user_b):
+    if 'user_id' not in session:
+        flash('Please login to access chat.', 'error')
+        return redirect(url_for('login'))
+    user_a = session['user_id']
+    existing = Request.query.filter(
+        ((Request.requester_id == user_a) & (Request.recipient_id == user_b)) |
+        ((Request.requester_id == user_b) & (Request.recipient_id == user_a))
+    ).filter_by(status='accepted').first()
+
+    if existing:
+        return render_template('chat.html', user_b=user_b, user_a=user_a)
+    else:
+        flash('You need to send or accept a request first.', 'warning')
+        return redirect(url_for('home'))
+
+>>>>>>> 6add0c4 (add file)
 @app.route('/')
 def home():
     query = request.args.get('q', '')
@@ -74,7 +140,11 @@ def home():
 
     if query:
         users = users.filter(
+<<<<<<< HEAD
             db.or_(
+=======
+            or_(
+>>>>>>> 6add0c4 (add file)
                 User.skills_offered.ilike(f'%{query}%'),
                 User.skills_wanted.ilike(f'%{query}%'),
                 User.name.ilike(f'%{query}%')
@@ -85,7 +155,25 @@ def home():
     if availability:
         users = users.filter(User.availability.ilike(f'%{availability}%'))
 
+<<<<<<< HEAD
     return render_template('home.html', users=users.all())
+=======
+    chat_access = {}
+    if 'user_id' in session:
+        current_user_id = session['user_id']
+        for user in users:
+            if user.id != current_user_id:
+                accepted_request = Request.query.filter(
+                    or_(
+                        and_(Request.requester_id == current_user_id, Request.recipient_id == user.id),
+                        and_(Request.requester_id == user.id, Request.recipient_id == current_user_id)
+                    )
+                ).filter_by(status='accepted').first()
+                if accepted_request:
+                    chat_access[user.id] = True
+
+    return render_template('home.html', users=users.all(), chat_access=chat_access)
+>>>>>>> 6add0c4 (add file)
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
@@ -341,8 +429,74 @@ def logout():
     session.pop('user_id', None)
     flash('You have logged out.', 'info')
     return redirect(url_for('home'))
+<<<<<<< HEAD
+=======
+@app.route('/user/<int:user_id>', methods=['GET', 'POST'])
+def user_detail(user_id):
+    user = User.query.get_or_404(user_id)
+
+    if request.method == 'POST':
+        if 'user_id' not in session:
+            flash('You must be logged in to submit a review.', 'error')
+            return redirect(url_for('login'))
+
+        rating = request.form.get('rating')
+        if not rating or not rating.isdigit() or int(rating) < 1 or int(rating) > 5:
+            flash('Invalid rating.', 'error')
+            return redirect(url_for('user_detail', user_id=user_id))
+
+        rating = int(rating)
+
+        # Calculate new average rating
+        if user.rating == 0:
+            user.rating = rating
+        else:
+            user.rating = round((user.rating + rating) / 2, 1)
+
+        db.session.commit()
+        flash('Review submitted!', 'success')
+        return redirect(url_for('user_detail', user_id=user_id))
+
+    return render_template('user_detail.html', user=user)
+@app.route('/upload', methods=['GET', 'POST'])
+def upload_photo():
+    if 'user_id' not in session:
+        flash('Please login to upload photo.', 'error')
+        return redirect(url_for('login'))
+
+    user = User.query.get(session['user_id'])
+
+    if request.method == 'POST':
+        if 'photo' not in request.files:
+            flash('No file part', 'error')
+            return redirect(url_for('upload_photo'))
+
+        file = request.files['photo']
+
+        if file.filename == '':
+            flash('No selected file', 'error')
+            return redirect(url_for('upload_photo'))
+
+        if file and file.filename != '' and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            unique_filename = f"{user.email.split('@')[0]}_{filename}"
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], unique_filename))
+            user.photo_filename = unique_filename
+
+            db.session.commit()
+            flash('Profile photo updated!', 'success')
+            return redirect(url_for('profile'))
+
+    return render_template('upload_photo.html', user=user)
+
+app.jinja_env.globals.update(Request=Request)
+>>>>>>> 6add0c4 (add file)
 
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
+<<<<<<< HEAD
     app.run(debug=True)
+=======
+    app.run(debug=True)
+>>>>>>> 6add0c4 (add file)

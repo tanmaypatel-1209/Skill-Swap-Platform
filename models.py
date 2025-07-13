@@ -27,4 +27,27 @@ class Message(db.Model):
     timestamp = db.Column(db.DateTime, server_default=db.func.now())
     read = db.Column(db.Boolean, default=False)
     
+<<<<<<< HEAD
     sender = db.relationship('User', backref='messages')
+=======
+    sender = db.relationship('User', backref='messages')
+from flask_sqlalchemy import SQLAlchemy
+from datetime import datetime
+
+db = SQLAlchemy()
+
+# Request table
+class Request(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    sender_id = db.Column(db.Integer, nullable=False)
+    receiver_id = db.Column(db.Integer, nullable=False)
+    status = db.Column(db.String(20), default="pending")
+
+# Chat Message table
+class Message(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    sender_id = db.Column(db.Integer, nullable=False)
+    receiver_id = db.Column(db.Integer, nullable=False)
+    message = db.Column(db.Text, nullable=False)
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow)
+>>>>>>> 6add0c4 (add file)

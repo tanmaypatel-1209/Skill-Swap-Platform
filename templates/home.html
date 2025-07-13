@@ -255,6 +255,7 @@
     </form>
   </section>
 
+<<<<<<< HEAD
   <section class="card-list">
     {% if users %}
       {% for user in users %}
@@ -300,6 +301,59 @@
       </div>
     {% endif %}
   </section>
+=======
+<section class="card-list">
+  {% if users %}
+    {% for user in users %}
+      {% if 'user_id' in session and user.id != session['user_id'] or 'user_id' not in session %}
+      <div class="user-card">
+        <div class="left">
+          <img src="{{ url_for('static', filename='uploads/' + (user.photo_filename or 'profile.png')) }}" class="pfp" alt="{{ user.name }}">
+        </div>
+        <div class="middle">
+          <h3>{{ user.name }}</h3>
+          <p><span class="green">Skills Offered:</span>
+            {% for skill in user.skills_offered.split(',') %}
+              <span class="tag">{{ skill.strip() }}</span>
+            {% endfor %}
+          </p>
+          <p><span class="blue">Skills Wanted:</span>
+            {% for skill in user.skills_wanted.split(',') %}
+              <span class="tag">{{ skill.strip() }}</span>
+            {% endfor %}
+          </p>
+          <p><strong>Location:</strong> {{ user.location or 'Not specified' }}</p>
+          <p><strong>Availability:</strong> {{ user.availability or 'Not specified' }}</p>
+        </div>
+        <div class="right">
+          {% if 'user_id' in session %}
+            <a href="{{ url_for('user_detail', user_id=user.id) }}" class="req-btn">View Profile</a>
+
+            {% if chat_access.get(user.id) %}
+  <a href="{{ url_for('chat', user_b=user.id) }}" class="req-btn chat-btn">💬 Chat Now</a>
+{% endif %}
+
+          {% else %}
+            <a href="/login" class="req-btn">Login to Request</a>
+          {% endif %}
+
+          <div class="rating-container">
+            <span class="stars">★★★★★</span>
+            <span class="rating">({{ user.rating }}/5)</span>
+          </div>
+        </div>
+      </div>
+      {% endif %}
+    {% endfor %}
+  {% else %}
+    <div class="no-results">
+      <p>No users found matching your search.</p>
+      <a href="/" class="clear-search">Clear search filters</a>
+    </div>
+  {% endif %}
+</section>
+
+>>>>>>> 6add0c4 (add file)
 
   {% if users and users|length > 5 %}
   <section class="pagination">
