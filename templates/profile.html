@@ -319,20 +319,7 @@
         </div>
       </section>
 
-      <section class="profile-section">
-        <h3>Rate Your Experience</h3>
-        <form class="rating-form" method="POST" action="{{ url_for('rate_user', user_id=user.id) }}">
-          <select name="rating" required>
-            <option value="">Select rating</option>
-            <option value="5">5 - Excellent</option>
-            <option value="4">4 - Good</option>
-            <option value="3">3 - Average</option>
-            <option value="2">2 - Poor</option>
-            <option value="1">1 - Terrible</option>
-          </select>
-          <button type="submit">Submit Rating</button>
-        </form>
-      </section>
+      
 
     </div>
 
