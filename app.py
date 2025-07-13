@@ -1,21 +1,12 @@
-<<<<<<< HEAD
-from flask import Flask, render_template, request, redirect, url_for, session, flash
-=======
 from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify
->>>>>>> 6add0c4 (add file)
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 from flask_mail import Mail, Message
 from itsdangerous import URLSafeTimedSerializer
-<<<<<<< HEAD
-import os
-from datetime import datetime
-=======
 from datetime import datetime
 import os
 from sqlalchemy import or_, and_
->>>>>>> 6add0c4 (add file)
 
 app = Flask(__name__)
 app.secret_key = os.environ.get('SECRET_KEY', 'super_secret_123')
@@ -36,10 +27,6 @@ app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'postgres
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
-<<<<<<< HEAD
-# Upload configuration
-=======
->>>>>>> 6add0c4 (add file)
 UPLOAD_FOLDER = 'static/uploads'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
@@ -73,12 +60,6 @@ class Request(db.Model):
     status = db.Column(db.String(20), default='pending')
     created_at = db.Column(db.DateTime, server_default=db.func.now())
     updated_at = db.Column(db.DateTime, onupdate=db.func.now())
-<<<<<<< HEAD
-    
-    requester = db.relationship('User', foreign_keys=[requester_id])
-    recipient = db.relationship('User', foreign_keys=[recipient_id])
-
-=======
 
     requester = db.relationship('User', foreign_keys=[requester_id])
     recipient = db.relationship('User', foreign_keys=[recipient_id])
@@ -129,7 +110,6 @@ def chat(user_b):
         flash('You need to send or accept a request first.', 'warning')
         return redirect(url_for('home'))
 
->>>>>>> 6add0c4 (add file)
 @app.route('/')
 def home():
     query = request.args.get('q', '')
@@ -140,11 +120,7 @@ def home():
 
     if query:
         users = users.filter(
-<<<<<<< HEAD
-            db.or_(
-=======
             or_(
->>>>>>> 6add0c4 (add file)
                 User.skills_offered.ilike(f'%{query}%'),
                 User.skills_wanted.ilike(f'%{query}%'),
                 User.name.ilike(f'%{query}%')
@@ -155,9 +131,6 @@ def home():
     if availability:
         users = users.filter(User.availability.ilike(f'%{availability}%'))
 
-<<<<<<< HEAD
-    return render_template('home.html', users=users.all())
-=======
     chat_access = {}
     if 'user_id' in session:
         current_user_id = session['user_id']
@@ -173,7 +146,6 @@ def home():
                     chat_access[user.id] = True
 
     return render_template('home.html', users=users.all(), chat_access=chat_access)
->>>>>>> 6add0c4 (add file)
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
@@ -429,8 +401,6 @@ def logout():
     session.pop('user_id', None)
     flash('You have logged out.', 'info')
     return redirect(url_for('home'))
-<<<<<<< HEAD
-=======
 @app.route('/user/<int:user_id>', methods=['GET', 'POST'])
 def user_detail(user_id):
     user = User.query.get_or_404(user_id)
@@ -490,13 +460,8 @@ def upload_photo():
     return render_template('upload_photo.html', user=user)
 
 app.jinja_env.globals.update(Request=Request)
->>>>>>> 6add0c4 (add file)
 
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
-<<<<<<< HEAD
     app.run(debug=True)
-=======
-    app.run(debug=True)
->>>>>>> 6add0c4 (add file)
